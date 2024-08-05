@@ -17,7 +17,6 @@ const RoomList = ({ rooms }: { rooms: any }) => {
     setFilteredRooms(filtered);
   }, [roomType]);
 
-  console.log(roomType);
 
   return (
     <section className="py-16 min-h-[90vh]">
