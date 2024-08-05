@@ -4,25 +4,77 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FaStar, FaStarHalf } from "react-icons/fa";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const RoomList = ({ rooms }: { rooms: any }) => {
+  const [roomType, setRoomType] = useState("all");
+  const [filteredRooms, setFilteredRooms] = useState([]);
+
+  useEffect(() => {
+    const filtered = rooms.data?.filter((room: any) => {
+      return roomType === "all" ? room : room.attributes.type === roomType;
+    });
+    setFilteredRooms(filtered);
+  }, [roomType]);
+
+  console.log(roomType);
+
   return (
     <section className="py-16 min-h-[90vh]">
       {/* image & title */}
       <div className="flex flex-col items-center">
-       {/* image */}
-       <div className="relative w-[82px] h-[20px]">
-        <Image src={'/assets/heading-icon.svg'} fill alt='' className="object-cover"/>
-       </div>
-       <h2 className="h2 mb-8">Our Rooms</h2>
+        {/* image */}
+        <div className="relative w-[82px] h-[20px]">
+          <Image
+            src={"/assets/heading-icon.svg"}
+            fill
+            alt=""
+            className="object-cover"
+          />
+        </div>
+        <h2 className="h2 mb-8">Our Rooms</h2>
       </div>
 
       {/* tabs */}
-      <div>tabs</div>
+      <Tabs
+        defaultValue="all"
+        className="w-[240px] lg:w-[540px] h-[200px] lg:h-auto mb-8 mx-auto"
+      >
+        <TabsList className="w-full h-full lg:h-[46px] flex flex-col lg:flex-row">
+          <TabsTrigger
+            className="w-full h-full"
+            value="all"
+            onClick={() => setRoomType("all")}
+          >
+            All
+          </TabsTrigger>
+          <TabsTrigger
+            className="w-full h-full"
+            value="single"
+            onClick={() => setRoomType("single")}
+          >
+            Single
+          </TabsTrigger>
+          <TabsTrigger
+            className="w-full h-full"
+            value="double"
+            onClick={() => setRoomType("double")}
+          >
+            Double
+          </TabsTrigger>
+          <TabsTrigger
+            className="w-full h-full"
+            value="extended"
+            onClick={() => setRoomType("extended")}
+          >
+            Extended
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {/* room list */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {rooms.data.map((room: any) => {
+        {filteredRooms?.map((room: any) => {
           const imgUrl = `http://127.0.0.1:1337${room.attributes.image.data?.attributes.url}`;
           return (
             <div key={room.id}>
