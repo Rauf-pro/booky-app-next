@@ -14,6 +14,9 @@ import {
   RegisterLink,
   LoginLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
+// components
+import { Button } from "./ui/button";
+import Dropdown from "./Dropdown";
 
 const Header = async () => {
   const { isAuthenticated, getUser } = getKindeServerSession();
@@ -51,11 +54,15 @@ const Header = async () => {
           <div>
             <div>
               {isUserAuthenticated ? (
-                <div>dropdown</div>
+                <Dropdown/>
               ) : (
                 <div className="flex gap-2">
-                  <LoginLink>Sign in</LoginLink>
-                  <RegisterLink>Sign up</RegisterLink>
+                  <LoginLink>
+                    <Button>Sign in</Button>
+                  </LoginLink>
+                  <RegisterLink>
+                  <Button>Register</Button>
+                  </RegisterLink>
                 </div>
               )}
             </div>
