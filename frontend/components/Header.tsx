@@ -21,7 +21,9 @@ import Dropdown from "./Dropdown";
 const Header = async () => {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
-  console.log(isUserAuthenticated);
+ 
+  const user = await getUser();
+ 
   return (
     <header className="py-6 shadow-md">
       <div className="container mx-auto">
@@ -51,14 +53,14 @@ const Header = async () => {
             </div>
           </div>
           {/* sign in & sign up btns */}
-          <div>
-            <div>
+          <div className="flex items-center justify-center gap-8 xl:w-max">
+            <div className="flex items-center gap-2 xl:order-2">
               {isUserAuthenticated ? (
-                <Dropdown/>
+                <Dropdown user={user}/>
               ) : (
                 <div className="flex gap-2">
                   <LoginLink>
-                    <Button>Sign in</Button>
+                    <Button variant={"primary"}>Sign in</Button>
                   </LoginLink>
                   <RegisterLink>
                   <Button>Register</Button>
@@ -66,6 +68,10 @@ const Header = async () => {
                 </div>
               )}
             </div>
+            {/* mobile nav */}
+            <div className="xl:hidden">mobile nav</div>
+            {/* desktop nav */}
+            <div className="hidden xl:flex">desktop nav</div>
           </div>
         </div>
       </div>
