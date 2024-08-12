@@ -374,7 +374,7 @@ export interface ApiReservationReservation extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    firtsname: Attribute.String;
+    firstname: Attribute.String;
     lastname: Attribute.String;
     email: Attribute.Email;
     checkin: Attribute.Date;

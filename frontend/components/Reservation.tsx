@@ -13,6 +13,24 @@ import {
 } from "../components/ui/popover";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import AlertMessage from "./AlertMessage";
+import { useRouter } from "next/navigation";
+
+const postData = async (url: string, data: any) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
+
+  try {
+    const res = await fetch(url, options);
+    const data = await res.json();
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
 const Reservation = ({
   reservations,
@@ -32,13 +50,15 @@ const Reservation = ({
     type: "error" | "success" | null;
   } | null>(null);
 
+  const router = useRouter();
+
   const formatDateForStrapi = (date: Date) => {
     return format(date, "yyyy-MM-dd");
-  }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setAlertMessage(null);
+     return setAlertMessage(null);
     }, 3000);
     // clear timer
     return () => clearTimeout(timer);
@@ -46,16 +66,80 @@ const Reservation = ({
 
   const saveReservation = () => {
     if (!checkInDate || !checkOutDate) {
-      setAlertMessage({
+     return setAlertMessage({
         message: "Please select check in and check out dates",
         type: "error",
       });
     }
-    if (checkInDate?.getTime() === checkOutDate?.getTime()) {
+    if (checkInDate.getTime() === checkOutDate.getTime()) {
       return setAlertMessage({
         message: "Check in and check out dates cannot be the same",
         type: "error",
       });
+    }
+
+    // check if the room is already booked
+    const isReserved = reservations.data
+      .filter(
+        (item: any) => item.attributes.room.data.id === room.data.id // filter reservations for the current room
+      )
+      .some((item: any) => {
+        // check if any reservation overlops with the selected dates
+        const existingCheckIn = new Date(item.attributes.checkIn).setHours(
+          0,
+          0,
+          0,
+          0
+        ); // convert existing check-in date to midnight
+        const existingCheckOut = new Date(item.attributes.checkOut).setHours(
+          0,
+          0,
+          0,
+          0
+        );
+
+        // convert selected check-in and check-out dates to midnight
+        const checkInTime = checkInDate.setHours(0, 0, 0, 0);
+        const checkOutTime = checkOutDate.setHours(0, 0, 0, 0);
+
+        // check if the rooms are already booked
+        const isReservedBetweenDates =
+          (checkInTime >= existingCheckIn && checkInTime < existingCheckOut) ||
+          (checkOutTime > existingCheckIn &&
+            checkOutTime <= existingCheckOut) ||
+          (existingCheckIn >= checkInTime && existingCheckIn < checkOutTime) ||
+          (existingCheckOut > checkInTime && existingCheckOut <= checkOutTime);
+
+        return isReservedBetweenDates;
+      });
+
+    if (isReserved) {
+      setAlertMessage({
+        message:
+          "Room is already booked for the selected dates. Please select different dates",
+        type: "error",
+      });
+    } else {
+      // real data
+      const data = {
+        data: {
+          firstname: userData.given_name,
+          lastname: userData.family_name,
+          email: userData.email,
+          checkIn: checkInDate ? formatDateForStrapi(checkInDate) : null, // format check in date for strapi
+          checkOut: checkOutDate ? formatDateForStrapi(checkOutDate) : null, // format check out date for strapi
+          room: room.data.id,
+        },
+      };
+      // post data to the server
+      postData("http://127.0.0.1:1337/api/reservations", data);
+
+      setAlertMessage({
+        message: "Room booked successfully",
+        type: "success",
+      });
+      // refresh the page
+      router.refresh()
     }
   };
 

@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "firtsname": {
+    "firstname": {
       "type": "string"
     },
     "lastname": {
