@@ -17,6 +17,7 @@ import {
 // components
 import { Button } from "./ui/button";
 import Dropdown from "./Dropdown";
+import MobileNav from "./MobileNav";
 
 const Header = async () => {
   const { isAuthenticated, getUser } = getKindeServerSession();
@@ -69,7 +70,9 @@ const Header = async () => {
               )}
             </div>
             {/* mobile nav */}
-            <div className="xl:hidden">mobile nav</div>
+            <div className="xl:hidden">
+              <MobileNav/>
+            </div>
             {/* desktop nav */}
             <div className="hidden xl:flex">desktop nav</div>
           </div>
