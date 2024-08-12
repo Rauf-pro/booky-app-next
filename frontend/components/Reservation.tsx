@@ -12,6 +12,7 @@ import {
   PopoverTrigger,
 } from "../components/ui/popover";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import AlertMessage from "./AlertMessage";
 
 const Reservation = ({
   reservations,
@@ -31,12 +32,28 @@ const Reservation = ({
     type: "error" | "success" | null;
   } | null>(null);
 
-  useEffect(() => {});
+  const formatDateForStrapi = (date: Date) => {
+    return format(date, "yyyy-MM-dd");
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAlertMessage(null);
+    }, 3000);
+    // clear timer
+    return () => clearTimeout(timer);
+  }, [alertMessage]);
 
   const saveReservation = () => {
     if (!checkInDate || !checkOutDate) {
       setAlertMessage({
         message: "Please select check in and check out dates",
+        type: "error",
+      });
+    }
+    if (checkInDate?.getTime() === checkOutDate?.getTime()) {
+      return setAlertMessage({
+        message: "Check in and check out dates cannot be the same",
         type: "error",
       });
     }
@@ -134,6 +151,9 @@ const Reservation = ({
           )}
         </div>
       </div>
+      {alertMessage && (
+        <AlertMessage message={alertMessage.message} type={alertMessage.type} />
+      )}
     </div>
   );
 };
