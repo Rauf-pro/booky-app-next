@@ -1,3 +1,5 @@
+import Reservation from "@/components/Reservation";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Image from "next/image";
 import { TbArrowsMaximize, TbUsers } from "react-icons/tb";
 
@@ -13,9 +15,23 @@ const getRoomData = async ({ params }: { params: any }) => {
   return await res.json();
 };
 
+const getReservationData = async () => {
+  const res = await fetch("http://127.0.0.1:1337/api/reservations?populate=*", {
+    next: {
+      revalidate: 0,
+    },
+  });
+  return await res.json();
+};
+
 const RoomDetails = async ({ params }: { params: any }) => {
   const room = await getRoomData({ params });
-  console.log(room);
+  const reservations = await getReservationData();
+  const { isAuthenticated, getUser } = getKindeServerSession();
+  const isUserAuthenticated = await isAuthenticated();
+  const useData = await getUser();
+  console.log(reservations);
+
   const imgUrl = `http://127.0.0.1:1337${room.data.attributes.image.data?.attributes.url}`;
   return (
     <section className="min-h-[80vh]">
@@ -43,11 +59,13 @@ const RoomDetails = async ({ params }: { params: any }) => {
                   <div className="text-2xl text-accent">
                     <TbArrowsMaximize />
                   </div>
-                  <p>{room.data.attributes.size} m <sup>2</sup></p>
+                  <p>
+                    {room.data.attributes.size} m <sup>2</sup>
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="text-2xl text-accent">
-                    <TbUsers/>
+                    <TbUsers />
                   </div>
                   <p>{room.data.attributes.capacity} Guests</p>
                 </div>
@@ -56,8 +74,13 @@ const RoomDetails = async ({ params }: { params: any }) => {
             </div>
           </div>
           {/* reservation */}
-          <div className="w-full lg:max-w-[360px] h-max bg-green-300">
-            reservation
+          <div className="w-full lg:max-w-[360px] h-max ">
+            <Reservation
+              reservations={reservations}
+              room={room}
+              isUserAuthenticated={isUserAuthenticated}
+              userData={useData}
+            />
           </div>
         </div>
       </div>
