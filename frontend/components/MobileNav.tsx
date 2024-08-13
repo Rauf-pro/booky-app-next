@@ -11,19 +11,19 @@ const links = [
   },
   {
     name: "Restaurant",
-    path: "/",
+    path: "#",
   },
   {
     name: "Pool",
-    path: "/",
+    path: "#",
   },
   {
     name: "Best deals",
-    path: "/",
+    path: "#",
   },
   {
     name: "Contact",
-    path: "/",
+    path: "#",
   },
 ];
 
