@@ -30,9 +30,10 @@ const RoomDetails = async ({ params }: { params: any }) => {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const isUserAuthenticated = await isAuthenticated();
   const useData = await getUser();
-  console.log(reservations);
+  
 
   const imgUrl = `http://127.0.0.1:1337${room.data.attributes.image.data?.attributes.url}`;
+  
   return (
     <section className="min-h-[80vh]">
       <div className="container mx-auto">

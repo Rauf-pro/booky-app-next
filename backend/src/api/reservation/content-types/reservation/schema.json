@@ -21,7 +21,7 @@
     "email": {
       "type": "email"
     },
-    "checkin": {
+    "checkIn": {
       "type": "date"
     },
     "checkOut": {

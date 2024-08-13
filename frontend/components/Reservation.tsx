@@ -43,7 +43,7 @@ const Reservation = ({
   isUserAuthenticated: boolean;
   userData: any;
 }) => {
-  const [checkInDate, setCheckinDate] = useState<Date>();
+  const [checkInDate, setCheckInDate] = useState<Date>();
   const [checkOutDate, setCheckOutDate] = useState<Date>();
   const [alertMessage, setAlertMessage] = useState<{
     message: string;
@@ -180,7 +180,7 @@ const Reservation = ({
               <Calendar
                 mode="single"
                 selected={checkInDate}
-                onSelect={setCheckinDate}
+                onSelect={setCheckInDate}
                 initialFocus
                 disabled={isPast}
               />

@@ -377,7 +377,7 @@ export interface ApiReservationReservation extends Schema.CollectionType {
     firstname: Attribute.String;
     lastname: Attribute.String;
     email: Attribute.Email;
-    checkin: Attribute.Date;
+    checkIn: Attribute.Date;
     checkOut: Attribute.Date;
     room: Attribute.Relation<
       'api::reservation.reservation',
