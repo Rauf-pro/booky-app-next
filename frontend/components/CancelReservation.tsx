@@ -15,7 +15,28 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 
+const deleteDate = async (url: string) => {
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const res = await fetch(url, options);
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 const CancelReservation = ({ reservation }: { reservation: any }) => {
+  const router = useRouter();
+  const cancelReservation = (id: number) => {
+    deleteDate(`http://127.0.0.1:1337/api/reservations/${id}`);
+    router.refresh();
+  };
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -32,7 +53,9 @@ const CancelReservation = ({ reservation }: { reservation: any }) => {
         {/* dialog footer */}
         <AlertDialogFooter>
           <AlertDialogCancel>Dismiss</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={() => cancelReservation(reservation.id)}>
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

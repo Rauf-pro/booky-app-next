@@ -27,14 +27,19 @@ const Dashboard = async () => {
         <h3 className="h3 font-bold mb-12 border-b pb-4 text-center lg:text-left">
           My bookings
         </h3>
-        <div>
-          {userReservations.length < 1 ? (
-            <div>
-              <p>You don &apos t have any reservations</p>
+        <div className="flex flex-col gap-8 h-full">
+          {userReservations.data.length < 1 ? (
+            <div className="flex flex-col items-center justify-center h-[50vh]">
+              <p className="text-xl text-center text-secondary/70 mb-4">
+                You don't have any reservations
+              </p>
+              {/* back to home page button */}
+              <Link href={"/"}>
+               <Button size="md">Back to home page</Button>
+              </Link>
             </div>
           ) : (
             userReservations.data.map((reservation: any) => {
-             
               return (
                 <div key={reservation.id} className="bg-tertiary py-8 px-12">
                   <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
@@ -62,7 +67,7 @@ const Dashboard = async () => {
                         </span>
                       </div>
                     </div>
-                    <CancelReservation reservation={reservation}/>
+                    <CancelReservation reservation={reservation} />
                   </div>
                 </div>
               );
