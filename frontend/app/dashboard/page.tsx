@@ -15,6 +15,7 @@ const getUserReservations = async (userEmail: any) => {
 };
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import CancelReservation from "@/components/CancelReservation";
 
 const Dashboard = async () => {
   const { getUser } = getKindeServerSession();
@@ -33,7 +34,7 @@ const Dashboard = async () => {
             </div>
           ) : (
             userReservations.data.map((reservation: any) => {
-              console.log(reservation);
+             
               return (
                 <div key={reservation.id} className="bg-tertiary py-8 px-12">
                   <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
@@ -61,6 +62,7 @@ const Dashboard = async () => {
                         </span>
                       </div>
                     </div>
+                    <CancelReservation reservation={reservation}/>
                   </div>
                 </div>
               );
